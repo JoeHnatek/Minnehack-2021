@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/greenship/build/static', template_folder='../frontend/greenship/build')
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:umdMinnehack2021@34.203.31.126:5432/minnehack"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -10,7 +10,15 @@ migrate = Migrate(app, db)
 
 @app.route('/')
 def index():
-    return "wow"
+    return render_template("index.html")
+
+@app.route('/scrape/<tracking>/', methods=["POST", "GET"])  # GET is only there as a test
+def scrape(tracking):
+    return "scraping {}...".format(tracking)
+
+@app.route('/info/<tracking>/', methods=["GET"])
+def getInfo(tracking):
+    return "getting {} info...".format(tracking)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
